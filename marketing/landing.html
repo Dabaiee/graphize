@@ -1,0 +1,364 @@
+<title>Graphize — Paste your data, get a knowledge graph you can talk to</title>
+<style>
+  :root {
+    --bg: #080d18;
+    --bg2: #0b1222;
+    --panel: #0f1930;
+    --line: #1b2942;
+    --text: #e9eefb;
+    --muted: #91a4c4;      /* blue-biased neutral, chosen not defaulted */
+    --cyan: #3fc0f0;        /* the single bold accent — edges */
+    --magenta: #fb7bc0;
+    --green: #46d69a;
+    --amber: #f2c368;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--sans); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--cyan); text-decoration: none; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- HERO ---------- */
+  .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+  #net { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero-veil {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 90% at 78% 30%, rgba(8,13,24,0) 0%, rgba(8,13,24,.55) 55%, var(--bg) 100%),
+      linear-gradient(90deg, var(--bg) 8%, rgba(8,13,24,.72) 42%, rgba(8,13,24,0) 72%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; padding: 92px 0 84px; }
+  .wordmark {
+    font-family: var(--mono); font-size: 14px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--text); display: inline-flex; gap: 8px;
+    align-items: center; margin-bottom: 40px;
+  }
+  .wordmark .bolt { color: var(--cyan); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--cyan); margin: 0 0 18px;
+  }
+  h1 {
+    font-family: var(--sans); font-weight: 800;
+    font-size: clamp(2.5rem, 6.2vw, 4.4rem); line-height: 1.02;
+    letter-spacing: -.025em; margin: 0 0 22px; max-width: 15ch;
+    text-wrap: balance;
+  }
+  h1 .accent { color: var(--cyan); }
+  .subhead { font-size: clamp(1.05rem, 2vw, 1.25rem); color: var(--muted); max-width: 54ch; margin: 0 0 30px; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .btn {
+    font-family: var(--mono); font-size: 14px; letter-spacing: .02em;
+    padding: 13px 22px; border-radius: 10px; font-weight: 600; cursor: pointer;
+    border: 1px solid transparent; transition: transform .12s ease, background .12s ease;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--cyan); color: #04121e; }
+  .btn-primary:hover { background: #5fd0fb; }
+  .btn-ghost { background: transparent; border-color: var(--line); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--cyan); }
+  .wedge {
+    margin-top: 40px; max-width: 46ch; padding: 16px 18px;
+    border: 1px solid var(--line); border-left: 2px solid var(--cyan);
+    border-radius: 8px; background: rgba(15,25,48,.55); backdrop-filter: blur(3px);
+    font-size: 14px; color: var(--muted);
+  }
+  .wedge b { color: var(--text); font-weight: 600; }
+  .stats {
+    display: flex; gap: 28px; flex-wrap: wrap; margin-top: 44px;
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+  }
+  .stat b { display: block; font-size: 1.9rem; color: var(--text); font-weight: 700; }
+  .stat span { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+  /* ---------- SECTIONS ---------- */
+  section.block { padding: 84px 0; border-bottom: 1px solid var(--line); }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--cyan); margin: 0 0 14px; }
+  h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 700; letter-spacing: -.02em; margin: 0 0 16px; text-wrap: balance; }
+  .lead { color: var(--muted); max-width: 62ch; font-size: 1.05rem; margin: 0 0 40px; }
+
+  /* pipeline */
+  .pipe { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+  .stage {
+    position: relative; flex: 1 1 130px; min-width: 130px;
+    border: 1px solid var(--line); border-radius: 12px; padding: 16px 14px;
+    background: var(--panel);
+  }
+  .stage .n { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
+  .stage .name { font-family: var(--mono); font-weight: 600; margin-top: 6px; font-size: 14.5px; }
+  .stage .desc { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.45; }
+  .stage.new { border-color: color-mix(in srgb, var(--magenta) 55%, var(--line)); }
+  .stage .badge {
+    position: absolute; top: -9px; right: 10px; font-family: var(--mono);
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+    background: var(--magenta); color: #1a0410; padding: 2px 7px; border-radius: 999px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: 1px; }
+
+  /* two-up concept */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .cardp { border: 1px solid var(--line); border-radius: 14px; padding: 24px; background: var(--panel); }
+  .cardp h3 { margin: 0 0 8px; font-size: 1.05rem; font-family: var(--mono); }
+  .cardp p { margin: 0; color: var(--muted); font-size: 14px; }
+  .cardp .tag { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* comparison */
+  .cmp-scroll { overflow-x: auto; }
+  table.cmp { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
+  table.cmp th, table.cmp td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  table.cmp th { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  table.cmp td:first-child { color: var(--muted); }
+  table.cmp .yes { color: var(--green); font-family: var(--mono); }
+  table.cmp .todo { color: var(--amber); font-family: var(--mono); }
+
+  /* stack chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { font-family: var(--mono); font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; color: var(--text); background: var(--panel); }
+
+  /* run / footer */
+  .run { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center; }
+  pre.code {
+    font-family: var(--mono); font-size: 13.5px; background: #060b15; border: 1px solid var(--line);
+    border-radius: 12px; padding: 18px 18px; overflow-x: auto; margin: 0; line-height: 1.7; color: #cfe0f5;
+  }
+  pre.code .c { color: var(--muted); }
+  pre.code .g { color: var(--green); }
+  footer { padding: 40px 0 64px; color: var(--muted); font-family: var(--mono); font-size: 13px; }
+  footer .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+  @media (max-width: 760px) {
+    .split, .run { grid-template-columns: 1fr; }
+    .hero-veil { background: linear-gradient(180deg, rgba(8,13,24,.35), var(--bg) 82%); }
+    .hero-inner { padding: 64px 0 56px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>
+
+<header class="hero">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="hero-veil"></div>
+  <div class="wrap hero-inner">
+    <div class="wordmark"><span class="bolt">⚡</span> GRAPHIZE</div>
+    <p class="eyebrow">Agentic knowledge graphs, automated</p>
+    <h1>Paste your data. Get a graph you can <span class="accent">talk to</span>.</h1>
+    <p class="subhead">
+      Graphize turns files or raw text into a queryable Neo4j knowledge graph —
+      automatically — using a team of Claude agents. No schema, no Cypher, no
+      graph expertise. One click.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://github.com/OWNER/graphize">★ Star on GitHub</a>
+      <a class="btn btn-ghost" href="#how">See how it works ↓</a>
+    </div>
+    <div class="wedge">
+      Inspired by DeepLearning.AI × Neo4j's 3-hour course on <b>hand-building</b>
+      agentic knowledge graphs — Graphize is the <b>one-click</b> version, and
+      ships the features their reference repo lists as <b>not yet implemented</b>.
+    </div>
+    <div class="stats">
+      <div class="stat"><b>7</b><span>Claude agents</span></div>
+      <div class="stat"><b>1</b><span>click to build</span></div>
+      <div class="stat"><b>0</b><span>lines of Cypher</span></div>
+      <div class="stat"><b>MIT</b><span>open source</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="block" id="how">
+    <div class="wrap">
+      <p class="kicker reveal">The pipeline</p>
+      <h2 class="reveal">Seven agents run behind one button.</h2>
+      <p class="lead reveal">
+        Each stage returns typed, schema-validated JSON — that's what makes the
+        automation reliable instead of a demo that works once. Structured data
+        builds deterministically; text is mined by parallel extraction.
+      </p>
+      <div class="pipe reveal">
+        <div class="stage"><span class="n">01</span><div class="name"><span class="dot" style="background:var(--cyan)"></span>intent</div><div class="desc">Objective + candidate entity/relationship types, from your form + a data sample.</div></div>
+        <div class="stage"><span class="n">02</span><div class="name"><span class="dot" style="background:var(--cyan)"></span>file&nbsp;suggestion</div><div class="desc">Which files serve the goal, and the role each one plays.</div></div>
+        <div class="stage"><span class="n">03</span><div class="name"><span class="dot" style="background:var(--cyan)"></span>schema</div><div class="desc">The graph schema + concrete build mapping for tables and text.</div></div>
+        <div class="stage"><span class="n">04</span><div class="name"><span class="dot" style="background:var(--cyan)"></span>construction</div><div class="desc">CSV → deterministic nodes/edges. Text → parallel per-chunk extraction.</div></div>
+        <div class="stage new"><span class="badge">shipped</span><span class="n">05</span><div class="name"><span class="dot" style="background:var(--magenta)"></span>resolution</div><div class="desc">Merge duplicate entities — “IBM” / “I.B.M.” / “Intl. Business Machines”.</div></div>
+        <div class="stage new"><span class="badge">shipped</span><span class="n">06</span><div class="name"><span class="dot" style="background:var(--magenta)"></span>critic</div><div class="desc">Check the graph against the goal; propose questions it can answer.</div></div>
+        <div class="stage"><span class="n">07</span><div class="name"><span class="dot" style="background:var(--green)"></span>graphrag</div><div class="desc">Answer questions with full-text retrieval + guarded read-only Cypher.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <p class="kicker reveal">One graph, two worlds</p>
+      <h2 class="reveal">Structured and unstructured, connected.</h2>
+      <div class="split">
+        <div class="cardp reveal">
+          <span class="tag" style="color:var(--cyan)">CSV · JSON · tables</span>
+          <h3>Deterministic build</h3>
+          <p>Rows become nodes and relationships from a mapping the schema agent
+          proposes. No LLM writes to the database — exact, cheap, repeatable.</p>
+        </div>
+        <div class="cardp reveal">
+          <span class="tag" style="color:var(--magenta)">Text · PDF · reviews · notes</span>
+          <h3>Parallel extraction</h3>
+          <p>Free text is chunked and mined for entities concurrently, then linked
+          back to the same nodes — so both halves fuse into a single graph.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <p class="kicker reveal">Inspired by the course — built past it</p>
+      <h2 class="reveal">What the reference repo leaves as TODO, Graphize ships.</h2>
+      <div class="cmp-scroll reveal">
+        <table class="cmp">
+          <thead>
+            <tr><th>Capability</th><th>The course repo</th><th>Graphize</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Interface</td><td>Conversational devtool</td><td class="yes">1-button web app</td></tr>
+            <tr><td>Intent capture</td><td>Multi-turn dialogue</td><td class="yes">One-shot form</td></tr>
+            <tr><td>Unstructured import</td><td class="todo">roadmap / TODO</td><td class="yes">✓ built</td></tr>
+            <tr><td>Entity resolution</td><td class="todo">roadmap / TODO</td><td class="yes">✓ built</td></tr>
+            <tr><td>Evaluation</td><td class="todo">roadmap / TODO</td><td class="yes">✓ built</td></tr>
+            <tr><td>Deploy</td><td>Local dev setup</td><td class="yes">docker compose up</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap run">
+      <div class="reveal">
+        <p class="kicker">Run it yourself</p>
+        <h2>One command. Claude is the only key you need.</h2>
+        <p class="lead" style="margin-bottom:20px">
+          Neo4j + API + UI come up together. Retrieval is Neo4j full-text — no
+          embedding service to configure.
+        </p>
+        <div class="chips">
+          <span class="chip">Claude</span><span class="chip">FastAPI</span>
+          <span class="chip">WebSockets</span><span class="chip">Neo4j + APOC</span>
+          <span class="chip">React</span><span class="chip">Docker</span>
+        </div>
+      </div>
+      <pre class="code reveal"><span class="c"># clone & configure</span>
+git clone https://github.com/OWNER/graphize
+cd graphize && cp .env.example .env
+<span class="c"># set ANTHROPIC_API_KEY in .env, then:</span>
+<span class="g">./deploy.sh</span>
+<span class="c"># → http://localhost:5280</span></pre>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <footer>
+      <div class="row">
+        <span>⚡ Graphize — MIT licensed. Built with Claude.</span>
+        <span><a href="https://github.com/OWNER/graphize">github.com/OWNER/graphize</a></span>
+      </div>
+    </footer>
+  </div>
+</main>
+
+<script>
+  // Live force-directed knowledge graph behind the hero — the subject as the hero.
+  (function () {
+    const canvas = document.getElementById("net");
+    const ctx = canvas.getContext("2d");
+    const COLORS = ["#3fc0f0", "#fb7bc0", "#46d69a", "#f2c368"];
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let W, H, DPR, nodes, edges;
+
+    function build() {
+      const N = window.innerWidth < 760 ? 24 : 42;
+      nodes = Array.from({ length: N }, () => ({
+        x: Math.random(), y: Math.random(), vx: 0, vy: 0,
+        c: COLORS[(Math.random() * COLORS.length) | 0],
+        r: 2 + Math.random() * 2.5,
+      }));
+      edges = [];
+      for (let i = 0; i < N; i++) {
+        const links = 1 + ((Math.random() * 2) | 0);
+        for (let k = 0; k < links; k++) {
+          const j = (Math.random() * N) | 0;
+          if (j !== i) edges.push([i, j]);
+        }
+      }
+    }
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = rect.width; H = rect.height;
+      canvas.width = W * DPR; canvas.height = H * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    function step() {
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          let dx = (a.x - b.x) * W, dy = (a.y - b.y) * H;
+          let d2 = dx * dx + dy * dy || 1;
+          const f = Math.min(120 / d2, 0.4);
+          const d = Math.sqrt(d2);
+          a.vx += (dx / d) * f / W; a.vy += (dy / d) * f / H;
+          b.vx -= (dx / d) * f / W; b.vy -= (dy / d) * f / H;
+        }
+      }
+      for (const [i, j] of edges) {
+        const a = nodes[i], b = nodes[j];
+        let dx = (b.x - a.x), dy = (b.y - a.y);
+        a.vx += dx * 0.0006; a.vy += dy * 0.0006;
+        b.vx -= dx * 0.0006; b.vy -= dy * 0.0006;
+      }
+      for (const n of nodes) {
+        n.vx += (0.5 - n.x) * 0.0008; n.vy += (0.5 - n.y) * 0.0008;
+        n.x += n.vx; n.y += n.vy; n.vx *= 0.9; n.vy *= 0.9;
+        if (n.x < 0.02 || n.x > 0.98) n.vx *= -1;
+        if (n.y < 0.04 || n.y > 0.96) n.vy *= -1;
+        n.x = Math.max(0.02, Math.min(0.98, n.x));
+        n.y = Math.max(0.04, Math.min(0.96, n.y));
+      }
+    }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.lineWidth = 1;
+      for (const [i, j] of edges) {
+        const a = nodes[i], b = nodes[j];
+        ctx.strokeStyle = "rgba(63,192,240,0.10)";
+        ctx.beginPath();
+        ctx.moveTo(a.x * W, a.y * H); ctx.lineTo(b.x * W, b.y * H); ctx.stroke();
+      }
+      for (const n of nodes) {
+        ctx.fillStyle = n.c; ctx.shadowColor = n.c; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.arc(n.x * W, n.y * H, n.r, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+    }
+    function loop() { step(); draw(); requestAnimationFrame(loop); }
+
+    build(); resize(); window.addEventListener("resize", () => { resize(); });
+    if (reduce) { for (let i = 0; i < 260; i++) step(); draw(); }
+    else loop();
+
+    // Gentle scroll reveal
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); obs.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+  })();
+</script>
