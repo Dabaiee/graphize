@@ -15,7 +15,7 @@ course — with the features their repo lists as TODO already shipped.
 - [ ] Record the demo → add `docs/demo.gif` to the README (single biggest
       conversion lever — do not launch without it).
 - [ ] Add 3 screenshots to `docs/` and reference them in the README.
-- [ ] Swap `<OWNER>/<REPO>` placeholders in README badges + clone URL.
+- [ ] Swap `<HANDLE>` + `<DEMO_LINK>` placeholders in marketing/CONTENT.md (X handle + demo link).
 - [ ] Test `git clone … && ./deploy.sh` on a clean machine (or fresh Docker) so
       first-run works for strangers. Confirm the sample build succeeds with a key.
 - [ ] Pin a tweet / featured LinkedIn once posted.

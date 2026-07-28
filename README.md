@@ -85,7 +85,7 @@ FastAPI ──► Orchestrator ──► [intent → files → schema → constr
 ## 🚀 Quickstart (one command)
 
 ```bash
-git clone https://github.com/<OWNER>/graphize && cd graphize
+git clone https://github.com/Dabaiee/graphize && cd graphize
 cp .env.example .env          # set ANTHROPIC_API_KEY
 ./deploy.sh                   # builds & starts Neo4j + API + UI
 ```

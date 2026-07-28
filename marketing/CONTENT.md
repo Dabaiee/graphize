@@ -1,6 +1,6 @@
 # Graphize — Launch Content Pack
 
-Ready-to-post copy for each channel. Replace `<REPO>`, `<HANDLE>`, `<DEMO_LINK>`
+Ready-to-post copy for each channel. Replace `<HANDLE>` and `<DEMO_LINK>`
 before posting. The one narrative through-line everywhere:
 
 > **"Google/DeepLearning.AI shipped a 3-hour course to hand-build agentic
@@ -56,7 +56,7 @@ Reddit (day 2, morning PT) → Product Hunt (optional, day 3).
 **Tweet 6 (CTA):**
 > 100% open source (MIT). One command to run locally.
 >
-> ⭐ Repo: <REPO>
+> ⭐ Repo: https://github.com/Dabaiee/graphize
 > 🎬 Demo: <DEMO_LINK>
 >
 > Built with Claude. If you're into agents + graphs, I'd love a star and your
@@ -191,7 +191,7 @@ comment fast and technically. Don't ask for upvotes anywhere._
 > It's MIT-licensed, runs with `docker compose up`, and Claude is the only
 > external dependency (retrieval is Neo4j full-text, no embedding service).
 >
-> Repo: <REPO> — would love feedback on the schema-inference and
+> Repo: https://github.com/Dabaiee/graphize — would love feedback on the schema-inference and
 > entity-resolution steps, that's where it's most likely to break.
 
 _Read each sub's self-promotion rules first. Lead with substance, not the link.
