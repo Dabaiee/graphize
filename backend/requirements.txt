@@ -3,7 +3,11 @@ uvicorn[standard]>=0.34
 # Unpinned: this app uses output_config.format (structured outputs) and
 # claude-opus-4-8, which require a recent SDK. Always pull the latest at build.
 anthropic
+# OpenAI SDK — also used for Ollama (OpenAI-compatible endpoint). See settings UI.
+openai>=1.40
 neo4j>=5.26
 python-multipart>=0.0.20
 pypdf>=5.1
 python-docx>=1.1
+# MCP server (Claude Code / Cursor / Claude Desktop integration) — see docs/MCP.md
+mcp>=1.2

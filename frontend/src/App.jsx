@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
-import { uploadFiles, loadSample, pasteText, runBuild } from "./api.js";
+import React, { useEffect, useRef, useState } from "react";
+import { uploadFiles, loadSample, pasteText, runBuild, getConfig } from "./api.js";
 import GraphView from "./GraphView.jsx";
 import Chat from "./Chat.jsx";
+import Settings from "./Settings.jsx";
 
 const STAGE_LABEL = {
   intent: "Understanding intent",
@@ -23,7 +24,11 @@ export default function App() {
   const [phase, setPhase] = useState("idle"); // idle | building | ready
   const [events, setEvents] = useState([]);
   const [result, setResult] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [cfg, setCfg] = useState(null);
   const fileRef = useRef(null);
+
+  useEffect(() => { getConfig().then(setCfg).catch(() => {}); }, []);
 
   async function onUpload(e) {
     const files = e.target.files;
@@ -73,9 +78,21 @@ export default function App() {
   return (
     <div className="app">
       <header>
+        <button className="gear" onClick={() => setShowSettings(true)} title="Model settings">⚙</button>
         <h1>⚡ Graphize</h1>
         <p>Paste your data, say what matters, click once — get a knowledge graph you can talk to.</p>
+        {cfg && (
+          <div className="provider-pill" onClick={() => setShowSettings(true)}>
+            {cfg.provider_ready
+              ? <>model: <b>{cfg.active_model}</b></>
+              : <>⚠ no model configured — click to set one</>}
+          </div>
+        )}
       </header>
+
+      {showSettings && (
+        <Settings onClose={() => setShowSettings(false)} onSaved={setCfg} />
+      )}
 
       {phase !== "ready" && (
         <section className="card builder">

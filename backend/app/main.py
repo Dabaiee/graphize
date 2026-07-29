@@ -20,7 +20,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile, WebSocket, WebSock
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from . import config, graph, ingest, orchestrator
+from . import config, graph, ingest, llm, orchestrator
 from .agents import graphrag
 from .ingest import Source, parse_file
 
@@ -38,6 +38,17 @@ os.makedirs(config.UPLOAD_DIR, exist_ok=True)
 
 class ChatRequest(BaseModel):
     question: str
+
+
+class ConfigUpdate(BaseModel):
+    provider: str | None = None
+    anthropic_api_key: str | None = None
+    anthropic_model: str | None = None
+    openai_api_key: str | None = None
+    openai_model: str | None = None
+    openai_base_url: str | None = None
+    ollama_base_url: str | None = None
+    ollama_model: str | None = None
 
 
 class PasteRequest(BaseModel):
@@ -60,7 +71,26 @@ def _summaries(sources: list[Source]) -> list[dict[str, Any]]:
 
 @app.get("/api/health")
 def health() -> dict[str, Any]:
-    return {"ok": True, "neo4j": graph.is_ready(), "model": config.MODEL}
+    return {"ok": True, "neo4j": graph.is_ready(), **config.public()}
+
+
+@app.get("/api/config")
+def get_config() -> dict[str, Any]:
+    return config.public()
+
+
+@app.post("/api/config")
+def set_config(body: ConfigUpdate) -> dict[str, Any]:
+    patch = {k: v for k, v in body.model_dump().items() if v is not None}
+    config.update(patch)
+    llm.reset_clients()  # rebuild clients with the new provider/keys
+    return config.public()
+
+
+@app.post("/api/config/test")
+def test_config() -> dict[str, Any]:
+    """Ping the currently-configured provider so the UI can validate it."""
+    return llm.ping()
 
 
 @app.post("/api/upload")

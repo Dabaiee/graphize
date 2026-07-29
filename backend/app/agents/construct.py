@@ -8,11 +8,40 @@ Two paths:
 """
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from . import make_uid
 from .. import llm
 from ..ingest import Source
+
+_INT_RE = re.compile(r"-?\d+$")
+
+
+def _coerce(v: Any) -> Any:
+    """Type-infer a CSV cell so numeric/boolean queries work in Neo4j.
+
+    "29.99" -> 29.99, "1984" -> 1984, "true" -> True, "P001" -> "P001".
+    """
+    if not isinstance(v, str):
+        return v
+    s = v.strip()
+    if _INT_RE.match(s):
+        try:
+            return int(s)
+        except ValueError:
+            pass
+    else:
+        try:
+            f = float(s)
+            if f == f and abs(f) != float("inf"):  # reject nan/inf
+                return f
+        except ValueError:
+            pass
+    low = s.lower()
+    if low in ("true", "false"):
+        return low == "true"
+    return v
 
 # ---------------------------------------------------------------------------
 # Structured (deterministic)
@@ -32,7 +61,7 @@ def build_structured(mapping: dict[str, Any], source: Source) -> tuple[list[dict
         if key_val in (None, ""):
             continue
         uid = make_uid(label, key_val)
-        props = {c: row[c] for c in prop_cols if row.get(c) not in (None, "")}
+        props = {c: _coerce(row[c]) for c in prop_cols if row.get(c) not in (None, "")}
         nodes[uid] = {"uid": uid, "label": label, "name": str(key_val), "properties": props}
 
         for rel in rels:

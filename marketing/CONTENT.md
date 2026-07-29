@@ -54,7 +54,7 @@ Reddit (day 2, morning PT) → Product Hunt (optional, day 3).
 > see none of it — just a graph and a chat box.
 
 **Tweet 6 (CTA):**
-> 100% open source (MIT). One command to run locally.
+> 100% open source (Apache-2.0). One command to run locally.
 >
 > ⭐ Repo: https://github.com/Dabaiee/graphize
 > 🎬 Demo: <DEMO_LINK>
@@ -91,7 +91,7 @@ Reddit (day 2, morning PT) → Product Hunt (optional, day 3).
 > Tech: Claude (structured outputs) · FastAPI + WebSockets · Neo4j + APOC ·
 > React · one-command Docker deploy.
 >
-> It's MIT-licensed and runs with a single command. Link in the comments. 👇
+> It's Apache-2.0 licensed and runs with a single command. Link in the comments. 👇
 >
 > I'd genuinely value feedback from anyone working on RAG, graphs, or agent
 > orchestration — what would you point it at?
@@ -144,7 +144,7 @@ vice versa). Submit to any "AI/LLM weekly" newsletters that accept links.
 ## 4) Hacker News (Show HN)
 
 **Title:**
-> Show HN: Graphize – Paste text, get a knowledge graph you can chat with (MIT)
+> Show HN: Graphize – Paste text, get a knowledge graph you can chat with (Apache-2.0)
 
 **First comment (post immediately after submitting):**
 > Author here. I built this after DeepLearning.AI/Neo4j/Google released a course
@@ -165,7 +165,7 @@ vice versa). Submit to any "AI/LLM weekly" newsletters that accept links.
 > most interesting to build, so they're in.
 >
 > Stack: Claude (structured outputs) / FastAPI + WebSockets / Neo4j + APOC /
-> React / docker-compose. MIT. Feedback and adversarial test cases very welcome —
+> React / docker-compose. Apache-2.0. Feedback and adversarial test cases very welcome —
 > especially where the schema inference or entity resolution falls over.
 
 _HN tips: submit 8–10am PT on a weekday. No emojis in title. Respond to every
@@ -188,7 +188,7 @@ comment fast and technically. Don't ask for upvotes anywhere._
 > unstructured text is extracted per-chunk in parallel; duplicate entities get
 > merged.
 >
-> It's MIT-licensed, runs with `docker compose up`, and Claude is the only
+> It's Apache-2.0 licensed, runs with `docker compose up`, and Claude is the only
 > external dependency (retrieval is Neo4j full-text, no embedding service).
 >
 > Repo: https://github.com/Dabaiee/graphize — would love feedback on the schema-inference and

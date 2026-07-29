@@ -43,6 +43,27 @@ export function runBuild(sessionId, answers, onEvent) {
   });
 }
 
+export async function getConfig() {
+  const res = await fetch(`${API}/api/config`);
+  if (!res.ok) throw new Error("Failed to load config");
+  return res.json();
+}
+
+export async function saveConfig(patch) {
+  const res = await fetch(`${API}/api/config`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  if (!res.ok) throw new Error("Failed to save config");
+  return res.json();
+}
+
+export async function testConfig() {
+  const res = await fetch(`${API}/api/config/test`, { method: "POST" });
+  return res.json();
+}
+
 export async function chat(question) {
   const res = await fetch(`${API}/api/chat`, {
     method: "POST",

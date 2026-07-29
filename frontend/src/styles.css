@@ -16,9 +16,50 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 .app { max-width: 1080px; margin: 0 auto; padding: 32px 20px 80px; }
-header { text-align: center; margin-bottom: 28px; }
+header { text-align: center; margin-bottom: 28px; position: relative; }
 header h1 { font-size: 40px; margin: 0 0 6px; }
 header p { color: var(--muted); margin: 0; }
+.gear {
+  position: absolute; top: 0; right: 0; background: var(--card); border: 1px solid var(--border);
+  color: var(--text); width: 40px; height: 40px; border-radius: 10px; font-size: 18px; cursor: pointer;
+}
+.gear:hover { border-color: var(--accent); }
+.provider-pill {
+  display: inline-block; margin-top: 12px; font-size: 12px; color: var(--muted);
+  background: #0b1424; border: 1px solid var(--border); border-radius: 999px;
+  padding: 5px 12px; cursor: pointer;
+}
+.provider-pill b { color: var(--accent); }
+
+/* ---- Settings modal ---- */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(2,6,16,.72); backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center; z-index: 50; padding: 20px;
+}
+.modal {
+  width: 100%; max-width: 460px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 22px; max-height: 90vh; overflow-y: auto;
+}
+.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.modal-head h2 { margin: 0; font-size: 18px; }
+.modal .x { background: none; border: none; color: var(--muted); font-size: 16px; cursor: pointer; }
+.fld { display: block; font-size: 13px; color: var(--muted); margin-top: 14px; }
+.fld .opt { color: #5b6b86; }
+.fld select, .fld input {
+  width: 100%; margin-top: 6px; background: #0b1424; border: 1px solid var(--border);
+  color: var(--text); border-radius: 10px; padding: 10px 12px; font-size: 14px;
+}
+.fld select:focus, .fld input:focus { outline: none; border-color: var(--accent); }
+.note { font-size: 12px; color: var(--muted); margin: 8px 0 0; line-height: 1.5; }
+.note code { background: #0b1424; padding: 1px 5px; border-radius: 5px; color: var(--good); }
+.test { margin-top: 14px; font-size: 13px; padding: 9px 12px; border-radius: 9px; }
+.test.ok { background: rgba(52,211,153,.12); color: var(--good); border: 1px solid rgba(52,211,153,.3); }
+.test.err { background: rgba(251,113,133,.12); color: #fb7185; border: 1px solid rgba(251,113,133,.3); }
+.modal-foot { display: flex; gap: 10px; margin-top: 20px; }
+.btn-ghost2 { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 11px; cursor: pointer; }
+.btn-ghost2:hover { border-color: var(--accent); }
+.btn-save { flex: 1; background: var(--accent); border: none; color: #04122b; font-weight: 600; border-radius: 10px; padding: 11px; cursor: pointer; }
+.btn-save:disabled, .btn-ghost2:disabled { opacity: .5; cursor: not-allowed; }
 
 .card {
   background: var(--card);

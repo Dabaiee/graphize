@@ -130,6 +130,24 @@ def run_build(sources: list[Source], answers: dict[str, str], emit: Emit) -> dic
              issues=review["issues"], suggestions=review["suggestions"],
              example_questions=review["example_questions"]))
 
+    # 7b — validate: actually run the critic's questions through GraphRAG and
+    # flag any the graph can't answer (enhancement; bounded to keep builds fast).
+    emit(_ev("validate", "start", "Testing the graph can answer its questions…"))
+    validated: list[dict] = []
+    for q in review.get("example_questions", [])[:3]:
+        try:
+            used = graphrag.answer(q).get("used", {})
+            answerable = bool(used.get("entities") or used.get("sources") or used.get("ran_cypher"))
+        except Exception:
+            answerable = False
+        validated.append({"question": q, "answerable": answerable})
+    review["validated_questions"] = validated
+    ok = sum(1 for v in validated if v["answerable"])
+    emit(_ev("validate", "done",
+             f"{ok}/{len(validated)} example questions answerable." if validated
+             else "No example questions to test.",
+             validated_questions=validated))
+
     result = {
         "objective": spec["objective"],
         "schema": schema,

@@ -4,12 +4,14 @@
 
 ### Paste your data. Click once. Get a knowledge graph you can talk to.
 
-**Graphize turns messy files or raw text into a queryable Neo4j knowledge graph — automatically — using a team of Claude agents. No schema design, no Cypher, no graph expertise required.**
+**Graphize turns messy files or raw text into a queryable Neo4j knowledge graph — automatically — using a team of AI agents. No schema design, no Cypher, no graph expertise required.**
+
+**The open, 1-click knowledge-graph app — the "Ollama of knowledge graphs":** self-hostable, run it *fully free* with a local model (Ollama) or bring your own Claude / GPT key. No lock-in.
 
 [Quickstart](#-quickstart-one-command) · [How it works](#-how-it-works) · [Demo](#-demo) · [vs. the course](#-inspired-by-the-course--built-past-it)
 
 <!-- badges: swap OWNER/REPO after you push -->
-![License](https://img.shields.io/badge/license-MIT-blue)
+![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 ![Stack](https://img.shields.io/badge/stack-Claude%20·%20FastAPI%20·%20Neo4j%20·%20React-8b5cf6)
 ![Deploy](https://img.shields.io/badge/deploy-docker%20compose-2496ed)
 
@@ -102,6 +104,35 @@ Open **http://localhost:5280**, click **load the sample dataset** (or paste any 
 
 > _Add `docs/demo.gif` here — a 20-second paste-text → graph → chat loop. (Script in [`marketing/DEMO_SCRIPT.md`](marketing/DEMO_SCRIPT.md).)_
 
+## 🔌 Use it from Claude Code / Cursor / Claude Desktop (MCP)
+
+Graphize ships an **MCP server** — build and query knowledge graphs straight from
+your AI chat, using your own Claude, with no hosting and no cost beyond your API
+key. Tools: `build_graph_from_text`, `build_graph_from_files`, `ask_graph`,
+`graph_stats`.
+
+```bash
+claude mcp add graphize \
+  --env ANTHROPIC_API_KEY=sk-ant-... --env NEO4J_URI=bolt://localhost:7690 \
+  -- /ABS/PATH/graphize/backend/.venv/bin/python /ABS/PATH/graphize/backend/mcp_server.py
+```
+
+Then, in chat: *"Use graphize to build a graph from this text… then tell me what it
+can answer."* Full setup (Claude Desktop / Cursor configs included) → **[docs/MCP.md](docs/MCP.md)**.
+
+## 🧩 Model providers (bring your own, or run free & local)
+
+Graphize is provider-agnostic. Pick one in the app's **⚙ Settings** (or `.env`):
+
+| Provider | Needs | Notes |
+|---|---|---|
+| **Anthropic (Claude)** | Anthropic API key | Best quality (default) |
+| **OpenAI (GPT)** | OpenAI API key | Native strict JSON schema |
+| **Ollama (local)** | [Ollama](https://ollama.com) running | **Free & offline** — `ollama pull llama3.1`; lower quality, so extraction uses JSON-mode + validation/retry |
+
+You configure the provider, key, and model right in the browser (⚙ top-right) —
+no `.env` editing, no restart. There's a **Test connection** button too.
+
 ## 📥 Supported inputs
 
 CSV · JSON (array-of-objects → tabular, else → text) · PDF · DOCX · TXT / MD · **pasted text**
@@ -134,4 +165,4 @@ Claude (Anthropic) · FastAPI · WebSockets · Neo4j + APOC · React + Vite · D
 
 ## 📄 License
 
-MIT — see [LICENSE](LICENSE).
+Apache 2.0 — see [LICENSE](LICENSE).

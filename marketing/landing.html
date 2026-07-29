@@ -86,15 +86,15 @@
   .lead { color: var(--muted); max-width: 62ch; font-size: 1.05rem; margin: 0 0 40px; }
 
   /* pipeline */
-  .pipe { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+  .pipe { display: flex; flex-wrap: wrap; gap: 12px; align-items: stretch; }
   .stage {
-    position: relative; flex: 1 1 130px; min-width: 130px;
-    border: 1px solid var(--line); border-radius: 12px; padding: 16px 14px;
-    background: var(--panel);
+    position: relative; flex: 1 1 200px; min-width: 180px;
+    border: 1px solid var(--line); border-radius: 12px; padding: 16px 15px;
+    background: var(--panel); overflow-wrap: anywhere;
   }
   .stage .n { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
-  .stage .name { font-family: var(--mono); font-weight: 600; margin-top: 6px; font-size: 14.5px; }
-  .stage .desc { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.45; }
+  .stage .name { font-family: var(--mono); font-weight: 600; margin-top: 6px; font-size: 14.5px; overflow-wrap: anywhere; }
+  .stage .desc { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.45; overflow-wrap: anywhere; }
   .stage.new { border-color: color-mix(in srgb, var(--magenta) 55%, var(--line)); }
   .stage .badge {
     position: absolute; top: -9px; right: 10px; font-family: var(--mono);
@@ -105,9 +105,9 @@
 
   /* two-up concept */
   .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .cardp { border: 1px solid var(--line); border-radius: 14px; padding: 24px; background: var(--panel); }
+  .cardp { border: 1px solid var(--line); border-radius: 14px; padding: 24px; background: var(--panel); min-width: 0; overflow-wrap: anywhere; }
   .cardp h3 { margin: 0 0 8px; font-size: 1.05rem; font-family: var(--mono); }
-  .cardp p { margin: 0; color: var(--muted); font-size: 14px; }
+  .cardp p { margin: 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
   .cardp .tag { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
 
   /* comparison */
@@ -125,6 +125,7 @@
 
   /* run / footer */
   .run { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center; }
+  .run > * { min-width: 0; }   /* let the code block shrink instead of overflowing */
   pre.code {
     font-family: var(--mono); font-size: 13.5px; background: #060b15; border: 1px solid var(--line);
     border-radius: 12px; padding: 18px 18px; overflow-x: auto; margin: 0; line-height: 1.7; color: #cfe0f5;
@@ -154,8 +155,9 @@
     <h1>Paste your data. Get a graph you can <span class="accent">talk to</span>.</h1>
     <p class="subhead">
       Graphize turns files or raw text into a queryable Neo4j knowledge graph —
-      automatically — using a team of Claude agents. No schema, no Cypher, no
-      graph expertise. One click.
+      automatically — using a team of AI agents. No schema, no Cypher, no graph
+      expertise. One click. Bring your own Claude/GPT key, or run it
+      <b>fully free with a local model</b>.
     </p>
     <div class="cta-row">
       <a class="btn btn-primary" href="https://github.com/Dabaiee/graphize">★ Star on GitHub</a>
@@ -167,10 +169,10 @@
       ships the features their reference repo lists as <b>not yet implemented</b>.
     </div>
     <div class="stats">
-      <div class="stat"><b>7</b><span>Claude agents</span></div>
+      <div class="stat"><b>7</b><span>AI agents</span></div>
       <div class="stat"><b>1</b><span>click to build</span></div>
       <div class="stat"><b>0</b><span>lines of Cypher</span></div>
-      <div class="stat"><b>MIT</b><span>open source</span></div>
+      <div class="stat"><b>OSS</b><span>Apache-2.0</span></div>
     </div>
   </div>
 </header>
@@ -267,7 +269,7 @@ cd graphize && cp .env.example .env
   <div class="wrap">
     <footer>
       <div class="row">
-        <span>⚡ Graphize — MIT licensed. Built with Claude.</span>
+        <span>⚡ Graphize — Apache-2.0 licensed. Built with Claude.</span>
         <span><a href="https://github.com/Dabaiee/graphize">github.com/Dabaiee/graphize</a></span>
       </div>
     </footer>
